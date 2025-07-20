@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class BorrowersForm {
@@ -31,7 +30,6 @@ public class BorrowersForm {
                            [700]  Arts & Recreation
                            [800]  Literature
                            [900]  History & Geography""");
-
         System.out.print("\n\nEnter Category Code to Browse Books:   ");
         bookCategory = scanner.nextLine();
 
@@ -143,25 +141,29 @@ public class BorrowersForm {
 
     public static String inputWithValidation(Scanner scanner, String fieldName){
         while(true){
-            try{
                 String input;
-
                 System.out.printf("%-20s:", fieldName);
                 input = scanner.nextLine();
 
-                //Add validation for name. It should be letters only.
-
                 if(input == null || input.trim().isEmpty()){
                     System.out.println(fieldName + " can't be empty. Please try again.");
-                }else if(!input.matches("^(?!.*[.-]{2})[a-zA-Z0-9\\s.-]+$")){
-                    System.out.println("Input contains too many special characters. Only letters, numbers, and spaces are allowed.");
-                }else{
-                    return input;
+                    continue;
                 }
-            }catch(InputMismatchException e){
-                System.out.println("Invalid input. Please try again.");
-                scanner.next();
-            }
+                
+                if (fieldName.equals("Full Name")){
+                    if (!input.matches("^[a-zA-Z\\s.,]+$")){
+                        System.out.println("Full Name can only contain letters, spaces, and periods. Please try again.");
+                        continue;
+                    }
+                }else {
+                    if(!input.matches("^(?!.*[.-]{2})[a-zA-Z0-9\\s.-]+$")){
+                        System.out.println("Input contains too many special characters. Only letters, numbers, and spaces are allowed.");
+                        continue;
+                    }
+                }
+
+                return input;
+            
         }
     }
 }
