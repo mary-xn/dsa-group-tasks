@@ -175,7 +175,9 @@ public class BorrowersForm {
         bookCategory = scanner.nextLine();
 
         //This is where our Map is being used.
-        //.containsKey() is also a method in Map in Java that returs a boolean(true/false). It asks "Does the Map called categoryNames contains the key that the user entered?"
+        /* .containsKey() is also a method in Map in Java that returs a boolean(true/false). 
+        It asks "Does the Map called categoryNames contains the key that the user entered?"
+        */
         if (categoryNames.containsKey(bookCategory)){
             displayBooksForCategory(bookCategory, categoryNames, categoryBooks, fullName, scanner);
         }else{
@@ -183,7 +185,10 @@ public class BorrowersForm {
         }
     }
 
-    //This is for the validation of the user inputs. This is not yet finished so I'll leave this unexplained for I might do some changes.
+    /*
+    This is for the validation of the user inputs. 
+    This is not yet finished so I'll leave this unexplained for I might do some changes.
+    */
     public static String inputWithValidation(Scanner scanner, String fieldName){
         while(true){
                 String input;
@@ -262,7 +267,10 @@ public class BorrowersForm {
     public static void displayBooksForCategory(String code, Map<String, String> names, Map<String, List<Book>> books, String fullName, Scanner scanner){
 
         String categoryName = names.get(code);
-        //List of the "Books" objects. This code basically tells the computer to "create a List of Books called 'bookList' and its content should be the books inside the category(code) that the user chose."
+        /*List of the "Books" objects. 
+        This code basically tells the computer to "create a List of Books called 'bookList' 
+        and its content should be the books inside the category(code) that the user chose."
+        */
         List<Book> bookList = books.get(code);
 
         
@@ -282,7 +290,9 @@ public class BorrowersForm {
         //The variable for the book choice of the user.
         int choice = -1;
 
-        /*A while loop that contains the logic for asking the user to choose a book. The loop is crucial so that every time the user enter an invalid choice, the user can always enter another choice again. It avoids the system from finishing.*/
+        /*A while loop that contains the logic for asking the user to choose a book. 
+        The loop is crucial so that every time the user enter an invalid choice, 
+        the user can always enter another choice again. It avoids the system from finishing.*/
         while (true) { 
            System.out.printf("%nEnter book to borrow [1-%d]: ", bookList.size());
            if(scanner.hasNextInt()){
@@ -301,11 +311,15 @@ public class BorrowersForm {
         }
 
         /*This code states that an object of a book called "selectedBook" is a book in the booklist that has a 'key' that the user chose.
-        The operation 'choice - 1' is crucial because as what I've said above, every index in the bookList starts with 0. So if the user chose the book 2, in the bookLost, it is actually book 3 because of its first number which is 0. That's why we have to subtract 1 from the choice variable.
+        The operation 'choice - 1' is crucial because as what I've said above, every index in the bookList starts with 0. 
+        So if the user chose the book 2, in the bookLost, it is actually book 3 because of its first number which is 0. 
+        That's why we have to subtract 1 from the choice variable.
         */
         Book selectedBook = bookList.get(choice - 1);
 
-        //This will get displayed after the user entered a book s/he wants to borrow. selectedBook.title is important to access the title and not the whole Book object itself.
+        /*This will get displayed after the user entered a book s/he wants to borrow. 
+        'selectedBook.title' is important to access the title and not the whole Book object itself.
+        Revisit the bookToBorrow() method above to understand what it does.*/
         bookToBorrow(selectedBook.title, fullName, categoryName);
 
     }
