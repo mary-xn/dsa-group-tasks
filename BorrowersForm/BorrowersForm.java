@@ -274,7 +274,7 @@ public class BorrowersForm {
         System.out.println("------------------------------------------");
         System.out.println("Borrower\t:" + fullName);
         System.out.println("Book Title\t:" + bookName);
-        System.out.println("Book Category\t:" + categoryName);
+        System.out.println("Category\t:" + categoryName);
         System.out.println("Borrow Date\t:" + borrowDate.format(formatter));
         System.out.println("Due Date\t:" + dueDate.format(formatter));
         System.out.print("\n\nConfirm borrow? (Y/N)\t:");
@@ -295,7 +295,7 @@ public class BorrowersForm {
                 System.out.println(">> Borrowing Cancelled");
                 System.out.println("--------------------------------------------------");
                 System.out.println("❌ The book was not borrowed.");
-                System.out.println("ℹ️  Returning to book selection menu...");
+                System.out.println("ℹ️  Exiting the system...");
                 System.out.println("--------------------------------------------------");
                 break;
 
