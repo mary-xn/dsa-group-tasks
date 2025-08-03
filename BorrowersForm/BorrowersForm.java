@@ -6,19 +6,16 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class BorrowersForm {
-    /*The class "Book" is used for the books to have a blueprint. This makes it easier for us to assign the title for each book and not redo it again and again.*/
     static class Book{
         String title, author;
         boolean availability;
 
-        //This is the constructor. It helps us assign the book's title right after we create a Book object.
         public Book(String title, String author, boolean availability){
             this.title = title;
             this.author = author;
-            this.availability = true;
+            this.availability = availability;
         }
 
-        //Availability method to be added.
         public boolean isAvailable(){
             return this.availability;
         }
@@ -41,21 +38,13 @@ public class BorrowersForm {
         }
     }
 
-    //This is the main method. Everything that is inside this is gonna run once we run the code.
     public static void main (String[] args){
         //Declaring variables.
         Scanner scanner = new Scanner(System.in);
         String studentId, fullName, program, section, bookCategory, bookName, categoryName;
         int bookNumber;
 
-        /*This is a Map, similar to HashMaps but we don't need to "create" it that's why it doesn't have "New Map".
-        It lets us store a key (category's code) and its corresponding value (the subject).
-        k = key
-        v = value
-
-        This Map makes it easier for our system to search through the codes that the user will enter.
-        This will make sense later in the bookCategory variable. I used this instead of switch cases for better readability.
-        */
+       
         Map<String, String> categoryNames = Map.ofEntries(
             Map.entry("000", "000 - General Works, Computer Science, Information"),
             Map.entry("100", "100 - Philosophy & Psychology"),
@@ -69,13 +58,8 @@ public class BorrowersForm {
             Map.entry("900", "900 - History & Geography")
         );
 
-        /*
-         This is categoryBooks HashMap. Similar to what we have above, but its values are list of books that each category has.
-         Similar to the code above, it makes us easier for our system to look for the book according to its index (the corresponding number of each book in the list. Note: It always starts with 0.)
-         */
         Map<String, List<Book>> categoryBooks = new HashMap<>();
         
-        //.put() is a method in HashMap that lets us store keys and values in our HashMap(categoryBooks)
         categoryBooks.put("000", List.of(
             new Book("The Information: A History, a Theory, a Flood", "James Gleick", true),
             new Book("Computer Science Illuminated", "Nell Dale", true),
@@ -197,10 +181,6 @@ public class BorrowersForm {
         System.out.print("\n\nEnter Category Code to Browse Books:   ");
         bookCategory = scanner.nextLine();
 
-        //This is where our Map is being used.
-        /* .containsKey() is also a method in Map in Java that returs a boolean(true/false). 
-        It asks "Does the Map called categoryNames contains the key that the user entered?"
-        */
         if (categoryNames.containsKey(bookCategory)){
             displayBooksForCategory(bookCategory, categoryNames, categoryBooks, fullName, scanner);
         }else{
@@ -215,7 +195,7 @@ public class BorrowersForm {
         System.out.println("Thank you for visiting the library!");
     }
 
-    //To be explained in person.
+
     public static String inputWithValidation(Scanner scanner, String fieldName){
         while(true){
                 String input;
@@ -258,15 +238,12 @@ public class BorrowersForm {
         }
     }
 
-    //This is the method that will help us print out the confirmation form.
     public static void borrowingConfirmation(String bookName, String fullName, String categoryName){
         Scanner scanner = new Scanner(System.in);
 
-        //For dates
         LocalDate borrowDate = LocalDate.now();
         LocalDate dueDate = borrowDate.plusDays(7);
 
-        //This is to convert the date into a more readable format.
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
 
 
@@ -280,7 +257,6 @@ public class BorrowersForm {
         System.out.print("\n\nConfirm borrow? (Y/N)\t:");
         char confirmation = scanner.next().charAt(0);
 
-        //Swtich case for confirmation.
         switch(confirmation){
             case 'Y':
                 System.out.println("\n🎉 Success!");
@@ -305,14 +281,11 @@ public class BorrowersForm {
         
     }
 
-    //This is the method that displays the categories and the books it contain.
+
     public static void displayBooksForCategory(String code, Map<String, String> names, Map<String, List<Book>> books, String fullName, Scanner scanner){
 
         String categoryName = names.get(code);
-        /*List of the "Books" objects. 
-        This code basically tells the computer to "create a List of Books called 'bookList' 
-        and its content should be the books inside the category(code) that the user chose."
-        */
+
         List<Book> bookList = books.get(code);
 
         
@@ -324,17 +297,13 @@ public class BorrowersForm {
         System.out.println("\n\n>> Available Books in Category " + categoryName);
         System.out.println("------------------------------------------");
 
-        //This is a for loop that displays all the books available in the category that the user chose.
         for(int i = 0; i< bookList.size(); i++){
             System.out.printf("[%d] %s by %s%n", i+1, bookList.get(i).title, bookList.get(i).author);
         }
 
-        //The variable for the book choice of the user.
         int choice = -1;
 
-        /*A while loop that contains the logic for asking the user to choose a book. 
-        The loop is crucial so that every time the user enter an invalid choice, 
-        the user can always enter another choice again. It avoids the system from finishing.*/
+
         while (true) { 
            System.out.printf("%nEnter book to borrow [1-%d]: ", bookList.size());
            if(scanner.hasNextInt()){
@@ -352,18 +321,10 @@ public class BorrowersForm {
            
         }
 
-        /*This code states that an object of a book called "selectedBook" is a book in the booklist that has a 'key' that the user chose.
-        The operation 'choice - 1' is crucial because as what I've said above, every index in the bookList starts with 0. 
-        So if the user chose the book 2, in the bookList, it is actually book 3 because of its first number which is 0. 
-        That's why we have to subtract 1 from the choice variable.
-        */
         Book selectedBook = bookList.get(choice - 1);
         selectedBook.getAvailabilityStatus();
 
         if (selectedBook.availability){
-            /*This will get displayed after the user entered a book s/he wants to borrow. 
-            'selectedBook.title' is important to access the title and not the whole Book object itself.
-            Revisit the borrowingConfirmation() method above to understand what it does.*/
             borrowingConfirmation(selectedBook.title, fullName, categoryName);
             selectedBook.setAvailability(false);
         }else{
