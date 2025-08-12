@@ -168,7 +168,7 @@ public class BorrowersForm {
             section = inputWithValidation(scanner, "Year and Section");
 
             while (true) {
-                
+
                 String selectedCategory = displayCategories(scanner);
             
                 if (selectedCategory.equals("099")) {
@@ -177,16 +177,9 @@ public class BorrowersForm {
             
        
                 if (categoryNames.containsKey(selectedCategory)) {
-                    String result = displayBooksForCategory(
-                        selectedCategory,
-                        categoryNames,
-                        categoryBooks,
-                        firstName,
-                        lastName,
-                        scanner
-                    );
+                    String result = displayBooksForCategory(selectedCategory, categoryNames, categoryBooks, firstName, lastName, scanner);
 
-                    if (result.equals("009")) {
+                    if (result.equals("099")) {
                         break;
                     }
             
@@ -270,7 +263,6 @@ public class BorrowersForm {
         System.out.println("Due Date\t:" + dueDate.format(formatter));
         System.out.print("\n\nConfirm borrow? (Y/N)\t:");
         char confirmation = scanner.next().charAt(0);
-        scanner.nextLine();
 
         switch(confirmation){
            
@@ -316,18 +308,23 @@ public class BorrowersForm {
 
         int choice = -1;
         while (true) {
-            System.out.printf("%nEnter book to borrow [1-%d]: ", bookList.size());
-            if (scanner.hasNextInt()) {
+            try {
+                System.out.printf("%nEnter book to borrow [1-%d]: ", bookList.size());
                 choice = scanner.nextInt();
-                scanner.nextLine(); 
+                scanner.nextLine();
                 if (choice >= 1 && choice <= bookList.size()) {
                     break;
-                } else {
-                    System.out.println("❌ Invalid selection. Please enter a number from the list.");
                 }
-            } else {
-                System.out.println("❌ Invalid input. Please enter a valid number.");
-                scanner.next(); 
+
+                if(String.valueOf(choice) == null || String.valueOf(choice).trim().isEmpty()) {
+                        System.out.println("❌ Input can't be empty. Please enter a valid number.");
+                } else {
+                    System.out.println("❌ Invalid input. Please enter a valid number.");
+             
+                }
+            } catch (Exception e) {
+                System.out.println("\"❌ Invalid input. Please enter a number.");
+                scanner.nextLine();
             }
         }
 
@@ -343,32 +340,30 @@ public class BorrowersForm {
         }
 
         int numChoice = -1;
-            System.out.println("\n\n>>What would you like to do?");
+        while (true) {
+            System.out.println("\n\n>> What would you like to do?");
             System.out.println("[1] Choose another book in this category");
             System.out.println("[2] Go back to categories");
             System.out.println("[3] Exit");
-            System.out.print("\nEnter choice: ");
-
-            if (scanner.hasNextInt()) {
+            System.out.print("\n\nEnter choice: ");
+            try {
                 numChoice = scanner.nextInt();
-                scanner.nextLine(); 
+                scanner.nextLine();
                 if (numChoice == 1) {
                     break; 
                 } else if (numChoice == 2) {
-                    code = displayCategories(scanner);
-                    displayBooksForCategory(code, names, books, firstName, lastName, scanner);
+                    return displayCategories(scanner); 
                 } else if (numChoice == 3) {
-                    return "009"; 
+                    return "099"; 
                 } else {
                     System.out.println("❌ Invalid option. Please enter 1, 2, or 3.");
                 }
-            } else {
+            } catch (Exception e) {
                 System.out.println("❌ Invalid input. Please enter a number.");
-                scanner.next();
+                scanner.nextLine();
             }
-            
+        }  
     }
-    return code;
 }
 
     public static String displayCategories(Scanner scanner){
