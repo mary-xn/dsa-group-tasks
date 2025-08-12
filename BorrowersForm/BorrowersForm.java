@@ -44,6 +44,8 @@ public class BorrowersForm {
         String bookCategory = "";
         int bookNumber;
 
+        //[4,5,6,8]
+
        
         Map<String, String> categoryNames = Map.ofEntries(
             Map.entry("000", "000 - General Works, Computer Science, Information"),
@@ -150,7 +152,7 @@ public class BorrowersForm {
             new Book("The History of the Ancient World","Susan Wise Bauer", true)
         ));
 
-        while(!bookCategory.equals("009")){
+        
             System.out.println("==========================================");
             System.out.println("    \uD83D\uDCDA LIBRARY BORROWER'S FORM   ");
             System.out.println("==========================================\n\n");
@@ -163,72 +165,85 @@ public class BorrowersForm {
             firstName = inputWithValidation(scanner, "First Name");
             lastName = inputWithValidation(scanner, "Last Name");
             program = inputWithValidation(scanner, "Program");
-            section = inputWithValidation(scanner, "Section");
+            section = inputWithValidation(scanner, "Year and Section");
 
+            while (true) {
+                
+                String selectedCategory = displayCategories(scanner);
             
-            System.out.println("\n\n>> \uD83D\uDCDA Browse Book Categories (Dewey Decimal System)");
-            System.out.println("------------------------------------------");
-            System.out.println("""
-                            [000]  General Works, Computer Science, Information
-                            [100]  Philosophy & Psychology
-                            [200]  Religion
-                            [300]  Social Sciences
-                            [400]  Language
-                            [500]  Science
-                            [600]  Technology
-                            [700]  Arts & Recreation
-                            [800]  Literature
-                            [900]  History & Geography
-                            [099]  Exit""");
-            System.out.print("\n\nEnter Category Code to Browse Books:   ");
-            bookCategory = scanner.nextLine();
+                if (selectedCategory.equals("099")) {
+                    break;
+                }
+            
+       
+                if (categoryNames.containsKey(selectedCategory)) {
+                    String result = displayBooksForCategory(
+                        selectedCategory,
+                        categoryNames,
+                        categoryBooks,
+                        firstName,
+                        lastName,
+                        scanner
+                    );
 
-            if (categoryNames.containsKey(bookCategory)){
-                bookCategory = displayBooksForCategory(bookCategory, categoryNames, categoryBooks, firstName, lastName, scanner);
-            }else{
-                System.out.println("❌ Invalid category code.");
+                    if (result.equals("009")) {
+                        break;
+                    }
+            
+                    if (categoryNames.containsKey(result)) {
+                        selectedCategory = result;
+                    }
+                } else {
+                    System.out.println("❌ Invalid category code.");
+                }
             }
-        }
+            
+        
         exitSystem();
     }
 
     public static void exitSystem(){
         System.out.println("\n\nExiting...");
-        System.out.println("--------------------------------------------------");
-        System.out.println("No book was borrowed.");
-        System.out.println("Thank you for visiting the library!");
+        System.out.println("\n\n==================================================");
+        System.out.println("      Thank you for using the library system!        ");
+        System.out.println("==================================================\n\n\n");
     }
 
 
     public static String inputWithValidation(Scanner scanner, String fieldName){
         while(true){
                 String input;
-                System.out.printf("%-20s: ", fieldName);
-                input = scanner.nextLine();
+                if (fieldName.equals("Year and Section")){
+                    System.out.printf("%-20s: ", fieldName);
+                    input = scanner.nextLine();
+                }else{
+                    System.out.printf("%-20s: ", fieldName);
+                    input = scanner.nextLine();
+                }
 
                 if(input == null || input.trim().isEmpty()){
                     System.out.println(fieldName + " can't be empty. Please try again.");
                     continue;
                 }
     
-                if (fieldName.equals("First Name") || fieldName.equals("Last Name")){
-                    if (!input.matches("^[a-zA-Z\\s]+$")){
-                        System.out.println("Full Name can only contain letters. Please try again.");
+                if (fieldName.equals("Student ID")){
+                    if (!input.matches("^(19|20)\\d{2}\\d{4}-[A-Za-z]$")){
+                        System.out.println("Student ID must follow the format YYYYNNNN-L (8 digits, a dash, and one letter). Please try again.");
                         continue;
                     }
-                }else if (fieldName.equals("Program")) {
-                    if (!input.matches("^[a-zA-Z\\s]+$")){
-                        System.out.println("Program can only contain letters and spaces. Please try again.");
+                }else if (fieldName.equals("First Name"  ) || fieldName.equals("Last Name")){
+                    if (!input.matches("^(?=.*[AEIOUaeiou])(?!.*([A-Za-z])\\1{2})[A-Za-z]+(?:[ ]-[ ][A-Za-z]+|[ '-][A-Za-z]+)*$")){
+                        System.out.println(fieldName + " must be 2–50 characters, start with a letter, contain only letters, spaces, or hyphens, include at least one vowel, and avoid triple repeated letters. Please try again..");
                         continue;
                     }
-                }else {
-                    if (!input.matches("^[a-zA-Z0-9\\s.-]+$")) {
-                        System.out.println("Input can only contain letters, numbers, spaces, periods, and hyphens.");
+                } else if (fieldName.equals("Program")) {
+                    if (!input.matches("^[A-Za-z]+(?:\\s*-\\s*[A-Za-z]+|\\s+[A-Za-z]+)*$")){
+                        System.out.println("Program must contain only letters and/or spaces. Please try again.");
                         continue;
                     }
-
-                    if (input.matches(".*(?i)([a-z])\\1.*")) {
-                        System.out.println("Input cannot contain repeated letters. Please try again.");
+                }else if (fieldName.equals("Year and Section")) {
+                    if (!input.matches("^[a-zA-Z1-4]{1,2}$")){
+                        System.out.println("Year must be a single digit (1–4) followed by a single letter (e.g., 2B). Please try again.");
                         continue;
                     }
                 }
@@ -258,21 +273,22 @@ public class BorrowersForm {
         scanner.nextLine();
 
         switch(confirmation){
+           
+            case 'y':
             case 'Y':
-                System.out.println("\n🎉 Success!");
+                System.out.println("--------------------------------------------------");
+                System.out.println(">>🎉 Success!");
                 System.out.println("✅ You have borrowed " + bookName);
                 System.out.println("📅 Please return it by: " + dueDate.format(formatter));
-                System.out.println("\n\nNote: This title is now marked as Not Available.");
-                System.out.println("\n\n==================================================");
-                System.out.println("      Thank you for using the library system!        ");
-                System.out.println("==================================================\n\n\n");
+                System.out.println("\n\nNote: This book is now marked as Not Available.");
+                System.out.println("--------------------------------------------------\n\n");
                 break;
+            case 'n':
             case 'N':
                 System.out.println(">> Borrowing Cancelled");
                 System.out.println("--------------------------------------------------");
                 System.out.println("❌ The book was not borrowed.");
-                System.out.println("ℹ️  Exiting the system...");
-                System.out.println("--------------------------------------------------\n\n\n");
+                System.out.println("--------------------------------------------------\n\n");
                 break;
 
             default:
@@ -282,76 +298,105 @@ public class BorrowersForm {
     }
 
 
-    public static String displayBooksForCategory(String code, Map<String, String> names, Map<String, List<Book>> books, String firstName, String lastName, Scanner scanner){
+    public static String displayBooksForCategory(String code, Map<String, String> names, Map<String, List<Book>> books, String firstName, String lastName, Scanner scanner) {
+    String categoryName = names.get(code);
+    List<Book> bookList = books.get(code);
 
-        String categoryName = names.get(code);
+    if (bookList == null || bookList.isEmpty()) {
+        System.out.println("\n>> No books available in this category.");
+        return "009"; 
+    }
 
-        List<Book> bookList = books.get(code);
-
-        
-        if (bookList == null || bookList.isEmpty()) {
-            System.out.println("\n>> No books available in this category.");
-            return "009";
-        }
-
+    while (true) {
         System.out.println("\n\n>> Available Books in Category " + categoryName);
         System.out.println("------------------------------------------");
-
-        for(int i = 0; i< bookList.size(); i++){
-            System.out.printf("[%d] %s by %s%n", i+1, bookList.get(i).title, bookList.get(i).author);
+        for (int i = 0; i < bookList.size(); i++) {
+            System.out.printf("[%d] %s by %s%n", i + 1, bookList.get(i).title, bookList.get(i).author);
         }
 
         int choice = -1;
-
-
-        while (true) { 
-           System.out.printf("%nEnter book to borrow [1-%d]: ", bookList.size());
-           if(scanner.hasNextInt()){
-            choice = scanner.nextInt();
-            scanner.nextLine();
-            if (choice >= 1 && choice <= bookList.size()){
-                break;
-            }else{
-                System.out.println("Invalid selection. Please enter a number from the list");
+        while (true) {
+            System.out.printf("%nEnter book to borrow [1-%d]: ", bookList.size());
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine(); 
+                if (choice >= 1 && choice <= bookList.size()) {
+                    break;
+                } else {
+                    System.out.println("❌ Invalid selection. Please enter a number from the list.");
+                }
+            } else {
+                System.out.println("❌ Invalid input. Please enter a valid number.");
+                scanner.next(); 
             }
-           }else{
-            System.out.println("Invalid input. Please enter a valid number.");
-            scanner.next(); 
-           }
-           
         }
 
         Book selectedBook = bookList.get(choice - 1);
         selectedBook.getAvailabilityStatus();
 
-        if (selectedBook.availability){
+      
+        if (selectedBook.availability) {
             borrowingConfirmation(selectedBook.title, firstName, lastName, categoryName);
             selectedBook.setAvailability(false);
-        }else{
-            int choiceForUnavailableBook = 0;
-            System.out.println("What would you like to do?");
-            System.out.println("--------------------------------------------------");
-            System.out.println("[1] Choose another book");
-            System.out.println("[2] Exit");
-            System.out.print("Enter choice: ");
-            choiceForUnavailableBook = scanner.nextInt();
-            scanner.nextLine();
-
-            switch(choiceForUnavailableBook){
-                case 1:
-                    displayBooksForCategory(code, names, books, firstName, lastName, scanner);
-                    break;
-                case 2:
-                    return "009";
-                default:
-                    System.out.println("Option unavailable. ");
-                    return "009";
-                    
-            }
+        } else {
+            System.out.println("⚠ This book is already borrowed.");
         }
-        return code;
+
+        int numChoice = -1;
+            System.out.println("\n\n>>What would you like to do?");
+            System.out.println("[1] Choose another book in this category");
+            System.out.println("[2] Go back to categories");
+            System.out.println("[3] Exit");
+            System.out.print("\nEnter choice: ");
+
+            if (scanner.hasNextInt()) {
+                numChoice = scanner.nextInt();
+                scanner.nextLine(); 
+                if (numChoice == 1) {
+                    break; 
+                } else if (numChoice == 2) {
+                    code = displayCategories(scanner);
+                    displayBooksForCategory(code, names, books, firstName, lastName, scanner);
+                } else if (numChoice == 3) {
+                    return "009"; 
+                } else {
+                    System.out.println("❌ Invalid option. Please enter 1, 2, or 3.");
+                }
+            } else {
+                System.out.println("❌ Invalid input. Please enter a number.");
+                scanner.next();
+            }
+            
+    }
+    return code;
+}
+
+    public static String displayCategories(Scanner scanner){
+        String bookCateg = "";
+        System.out.println("\n\n>> \uD83D\uDCDA Browse Book Categories (Dewey Decimal System)");
+            System.out.println("------------------------------------------");
+            System.out.println("""
+                            [000]  General Works, Computer Science, Information
+                            [100]  Philosophy & Psychology
+                            [200]  Religion
+                            [300]  Social Sciences
+                            [400]  Language
+                            [500]  Science
+                            [600]  Technology
+                            [700]  Arts & Recreation
+                            [800]  Literature
+                            [900]  History & Geography
+                            [099]  Exit""");
+            System.out.print("\n\nEnter Category Code to Browse Books:   ");
+            bookCateg = scanner.nextLine();
+
+
+
+        return bookCateg;
     }
 }
+
+    
 
   
 
