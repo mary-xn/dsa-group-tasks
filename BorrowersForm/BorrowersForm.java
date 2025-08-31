@@ -157,7 +157,7 @@ public class BorrowersForm {
             System.out.println("    \uD83D\uDCDA LIBRARY BORROWER'S FORM   ");
             System.out.println("==========================================\n\n");
 
-            System.out.println(">> Enter Borrower Informaton");
+            System.out.println(">> Enter Borrower's Information");
             System.out.println("------------------------------------------");
 
 
