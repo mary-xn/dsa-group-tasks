@@ -76,7 +76,7 @@ public class PackageTackingSystem {
         System.out.println("ADD NEW SHIPMENT\n");
         String id = getValidatedInput(
         "Enter Shipment ID (format: PKG-Number, e.g., PKG-101): ",
-        "^PKG-\\d+$",
+        "^(PKG|pkg)-\\d+$",
         "Invalid Shipment ID. Format must be PKG- followed by numbers (e.g., PKG-101)."
         );
         shipments.put(id, new Shipment(id));
@@ -88,7 +88,7 @@ public class PackageTackingSystem {
         System.out.println("ADD NEW CHECKPOINT\n");
         String id = getValidatedInput(
         "Enter Shipment ID (format: PKG-Number, e.g., PKG-101): ",
-        "^PKG-\\d+$",
+        "^(PKG|pkg)-\\d+$",
         "Invalid Shipment ID. Format must be PKG- followed by numbers (e.g., PKG-101)."
         );
         Shipment shipment = shipments.get(id);
@@ -107,7 +107,7 @@ public class PackageTackingSystem {
         System.out.println("VIEW TRACKING INFORMATION" );
         String id = getValidatedInput(
         "Enter Shipment ID (format: PKG-Number, e.g., PKG-101): ",
-        "^PKG-\\d+$",
+        "^(PKG|pkg)-\\d+$",
         "Invalid Shipment ID. Format must be PKG- followed by numbers (e.g., PKG-101)."
         );
         Shipment shipment = shipments.get(id);

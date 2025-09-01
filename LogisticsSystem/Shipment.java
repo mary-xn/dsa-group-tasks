@@ -15,7 +15,7 @@ public class Shipment{
             while (temp.next != null){
                 temp = temp.next;
             }
-            temp = newCheckpoint;
+            temp.next = newCheckpoint;
         }
 
         System.out.println("Checkpoint added successfully!");
